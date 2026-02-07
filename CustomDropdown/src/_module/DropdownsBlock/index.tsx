@@ -2,38 +2,13 @@ import styles from "./dropdownBlock.module.css";
 import CustomDropdown from "../../_components/Dropdown";
 import {useState} from "react";
 import type {CountryOption, ProductCategory} from "../../_types/types.ts";
+import {categoryOptions, cityOptions, countryOptions} from "../../mockData/data.ts";
+import {asyncSearch} from "../../_service/asyncSearch.ts";
 
 export default function DropdownsBlock() {
     const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
     const [selectedCity, setSelectedCity] = useState<string | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-    const countryOptions: CountryOption[] = [
-        {value: 'ua', label: 'Україна', flag: '🇺🇦'},
-        {value: 'us', label: 'США', flag: '🇺🇸'},
-        {value: 'uk', label: 'Велика Британія', flag: '🇬🇧'},
-        {value: 'de', label: 'Німеччина', flag: '🇩🇪'},
-    ];
-
-    const cityOptions: string[] = ['Київ', 'Львів', 'Одеса', 'Харків', 'Дніпро'];
-
-    const categoryOptions: ProductCategory[] = [
-        {value: 'electronics', label: 'Електроніка'},
-        {value: 'books', label: 'Книги'},
-        {value: 'clothes', label: 'Одяг'},
-        {value: 'toys', label: 'Іграшки'},
-    ];
-
-    const asyncSearch = async <T extends { label?: string } | string>(
-        query: string,
-        options: T[]
-    ): Promise<T[]> => {
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        return options.filter((o) => {
-            if (typeof o === "string") return o.toLowerCase().includes(query.toLowerCase());
-            return o.label!.toLowerCase().includes(query.toLowerCase());
-        });
-    };
 
     return (
         <div className={styles.appContainer}>
@@ -69,7 +44,7 @@ export default function DropdownsBlock() {
                     <CustomDropdown<string>
                         options={cityOptions}
                         value={selectedCity}
-                        onChange={(o) => setSelectedCity(o)}
+                        onChange={(option) => setSelectedCity(option)}
                         onSearch={asyncSearch}
                         placeholder="Виберіть місто"
                     />
@@ -80,7 +55,7 @@ export default function DropdownsBlock() {
                     <CustomDropdown<ProductCategory>
                         options={categoryOptions}
                         value={selectedCategory}
-                        onChange={(o) => setSelectedCategory(o.value)}
+                        onChange={(option) => setSelectedCategory(option.value)}
                         onSearch={asyncSearch}
                         placeholder="Виберіть категорію"
 
@@ -100,14 +75,14 @@ export default function DropdownsBlock() {
                     <div className={styles.selectedItems}>
                         <span>
                             Країна: {selectedCountry
-                                            ? `${countryOptions.find(c => c.value === selectedCountry)?.flag} ${countryOptions.find(c => c.value === selectedCountry)?.label}`
+                                            ? `${countryOptions.find(country => country.value === selectedCountry)?.flag} ${countryOptions.find(country => country.value === selectedCountry)?.label}`
                                             : 'не вибрано'}
                         </span>
                         <span>
                             Місто: {selectedCity ?? 'не вибрано'}
                         </span>
                         <span>
-                            Категорія: {selectedCategory ? categoryOptions.find(c => c.value === selectedCategory)?.label : 'не вибрано'}
+                            Категорія: {selectedCategory ? categoryOptions.find(category => category.value === selectedCategory)?.label : 'не вибрано'}
                         </span>
                     </div>
                 </div>
