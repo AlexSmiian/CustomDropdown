@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import {useCallback, useRef, useState} from "react";
 
 export function useDropdown(disabled: boolean) {
     const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +14,7 @@ export function useDropdown(disabled: boolean) {
         setHighlightedIndex(0);
         lastInteractionRef.current = 'keyboard';
         document.dispatchEvent(
-            new CustomEvent('dropdown-open', { detail: { ref: dropdownRef.current } })
+            new CustomEvent('dropdown-open', {detail: {ref: dropdownRef.current}})
         );
     }, [disabled, isOpen]);
 
@@ -33,7 +33,7 @@ export function useDropdown(disabled: boolean) {
                 setHighlightedIndex(0);
                 lastInteractionRef.current = 'mouse';
                 document.dispatchEvent(
-                    new CustomEvent('dropdown-open', { detail: { ref: dropdownRef.current } })
+                    new CustomEvent('dropdown-open', {detail: {ref: dropdownRef.current}})
                 );
             } else {
                 setHighlightedIndex(-1);
