@@ -12,7 +12,7 @@ export function useDropdown(disabled: boolean) {
             setIsOpen(true);
             setHighlightedIndex(0);
             document.dispatchEvent(
-                new CustomEvent('dropdown-open', { detail: { ref: dropdownRef.current } })
+                new CustomEvent('dropdown-open', {detail: {ref: dropdownRef.current}})
             );
         }
     }, [disabled, isOpen]);
@@ -24,7 +24,7 @@ export function useDropdown(disabled: boolean) {
             if (newState) {
                 setHighlightedIndex(0);
                 document.dispatchEvent(
-                    new CustomEvent('dropdown-open', { detail: { ref: dropdownRef.current } })
+                    new CustomEvent('dropdown-open', {detail: {ref: dropdownRef.current}})
                 );
             } else setHighlightedIndex(-1);
             return newState;
