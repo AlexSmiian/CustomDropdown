@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from "react";
+import { useCallback, useRef, useState } from "react";
 
 export function useDropdown(disabled: boolean) {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,16 +12,16 @@ export function useDropdown(disabled: boolean) {
 
         setIsOpen(true);
         setHighlightedIndex(0);
-        lastInteractionRef.current = 'keyboard';
+        lastInteractionRef.current = 'keyboard'; // відкриття через клавіатуру (Tab)
         document.dispatchEvent(
-            new CustomEvent('dropdown-open', {detail: {ref: dropdownRef.current}})
+            new CustomEvent('dropdown-open', { detail: { ref: dropdownRef.current } })
         );
     }, [disabled, isOpen]);
 
     const closeDropdown = useCallback(() => {
         setIsOpen(false);
         setHighlightedIndex(-1);
-        lastInteractionRef.current = null;
+        lastInteractionRef.current = null; // скидаємо після закриття
     }, []);
 
     const toggleDropdown = useCallback(() => {
@@ -31,9 +31,9 @@ export function useDropdown(disabled: boolean) {
             const newState = !prev;
             if (newState) {
                 setHighlightedIndex(0);
-                lastInteractionRef.current = 'mouse';
+                lastInteractionRef.current = 'mouse'; // відкриття через мишку
                 document.dispatchEvent(
-                    new CustomEvent('dropdown-open', {detail: {ref: dropdownRef.current}})
+                    new CustomEvent('dropdown-open', { detail: { ref: dropdownRef.current } })
                 );
             } else {
                 setHighlightedIndex(-1);
@@ -44,6 +44,7 @@ export function useDropdown(disabled: boolean) {
     }, [disabled]);
 
     const handleFocus = useCallback(() => {
+        // відкриваємо через Tab, лише якщо dropdown закритий і остання взаємодія не мишка
         if (!isOpen && lastInteractionRef.current !== 'mouse') {
             openDropdown();
         }
