@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+import {useOutsideClick} from "./useOutsideClick.ts";
 
 export function useDropdown(disabled: boolean) {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +13,7 @@ export function useDropdown(disabled: boolean) {
 
         setIsOpen(true);
         setHighlightedIndex(0);
-        lastInteractionRef.current = 'keyboard'; // відкриття через клавіатуру (Tab)
+        lastInteractionRef.current = 'keyboard';
         document.dispatchEvent(
             new CustomEvent('dropdown-open', { detail: { ref: dropdownRef.current } })
         );
@@ -21,7 +22,7 @@ export function useDropdown(disabled: boolean) {
     const closeDropdown = useCallback(() => {
         setIsOpen(false);
         setHighlightedIndex(-1);
-        lastInteractionRef.current = null; // скидаємо після закриття
+        lastInteractionRef.current = null;
     }, []);
 
     const toggleDropdown = useCallback(() => {
@@ -31,7 +32,7 @@ export function useDropdown(disabled: boolean) {
             const newState = !prev;
             if (newState) {
                 setHighlightedIndex(0);
-                lastInteractionRef.current = 'mouse'; // відкриття через мишку
+                lastInteractionRef.current = 'mouse';
                 document.dispatchEvent(
                     new CustomEvent('dropdown-open', { detail: { ref: dropdownRef.current } })
                 );
@@ -44,7 +45,6 @@ export function useDropdown(disabled: boolean) {
     }, [disabled]);
 
     const handleFocus = useCallback(() => {
-        // відкриваємо через Tab, лише якщо dropdown закритий і остання взаємодія не мишка
         if (!isOpen && lastInteractionRef.current !== 'mouse') {
             openDropdown();
         }
@@ -53,6 +53,10 @@ export function useDropdown(disabled: boolean) {
     const handleMouseDown = useCallback(() => {
         lastInteractionRef.current = 'mouse';
     }, []);
+
+    useOutsideClick(dropdownRef, () => {
+        closeDropdown();
+    }, isOpen);
 
     return {
         dropdownRef,
